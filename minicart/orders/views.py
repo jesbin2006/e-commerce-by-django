@@ -35,8 +35,8 @@ def checkout_cart(request):
                  )
                  if order_obj:
                      order_obj.order_status=order.ORDER_COMFIRMED
-                     order_obj.total_price=total
-                     order_obj.save()
+                     order_obj.total_price=total  
+                     order_obj.save()     
                      status_message="Your Order is Processed. Your Items Will Be Delivered With in 2 Days"
                      messages.success(request,status_message)
                  else:
@@ -46,13 +46,14 @@ def checkout_cart(request):
                   status_message="unable to Processed. no Items Will Be Delivered With in 2 Days"
                   messages.error(request,status_message)
              return redirect('cart')
+       
 
 @login_required(login_url='account')  
 def show_order(request):
     user=request.user
     customer=user.customer_profile
     all_orders=order.objects.filter(owner=customer)
-    context={'orders':all_orders}
+    context = {'orders': all_orders}
     return render(request,'order.html',context)
 
 
