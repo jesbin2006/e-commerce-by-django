@@ -21,8 +21,6 @@ def remove_item_from_cart(request,pk):
        item.delete()
     return redirect('cart')   
 
-
-
 def checkout_cart(request):
        if request.POST:
              try:
