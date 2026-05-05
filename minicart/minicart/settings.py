@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import dj_database_url
 from pathlib import Path
 import os
+from decouple import config 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +22,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=hadk62yzkrsc#0&#06iu7&hiod7ivkn#xsr3+59#*x_-^0iea'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG",cast=bool)
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOST",
+    default="127.0.0.1,localhost"
+).split(",")
 
 # Application definition
 
@@ -52,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'minicart.urls'
@@ -75,15 +79,15 @@ WSGI_APPLICATION = 'minicart.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
+# https://docs.djangoproject.com/en/6.0/ref/settings/#databas
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES['default'] = dj_database_url.parse("postgresql://jesbindb_user:GmGLVP98U1kqz0mb2NrHU31sRf888583@dpg-d7scmev7f7vs738463v0-a.ohio-postgres.render.com/jesbindb")
+
+DATABASES['default'] = dj_database_url.parse(config("DATABASE_URL"))
 
 
 # Password validation
@@ -124,6 +128,7 @@ STATIC_URL = 'minicart_files/'
 STATICFILES_DIRS=[
     BASE_DIR/'static'
 ]
+STATIC_ROOT =BASE_DIR / 'staticfiles'
 
 MEDIA_URL='media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
